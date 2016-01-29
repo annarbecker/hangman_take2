@@ -1,8 +1,9 @@
-function Hangman(words, gameWord, blanksArray, wrong) {
+function Hangman(words, gameWord, blanksArray, wrong, wrongAnswerCount) {
   this.words = ["cat", "harse", "pag"];
   this.gameWord = "";
   this.blanksArray = [];
   this.wrong = [];
+  this.wrongAnswerCount = 0;
 }
 
 Hangman.prototype.randomWord = function() {
@@ -36,6 +37,14 @@ Hangman.prototype.wrongGuess = function(userGuess) {
   }
 }
 
+Hangman.prototype.increaseWrongAnswerCount = function () {
+  for(var i = 0; i < 7; i++){
+    this.wrongAnswerCount++;
+  }
+  return this.wrongAnswerCount;
+}
+
+
 $(document).ready(function() {
 
   var myHangman = new Hangman();
@@ -43,12 +52,14 @@ $(document).ready(function() {
   $("#hangmanResult").append(myHangman.replaceWithBlanks());
 
   $("form#hangmanForm").submit(function(event) {
+
         var letterGuess = $("input#userInput").val();
         $("#hangmanResult").text (myHangman.replaceWithLetters(letterGuess));
         $("#wrongGuess").text(myHangman.wrongGuess(letterGuess));
     event.preventDefault();
+    var bodyPart = myHangman.increaseWrongAnswerCount().toString();
     $("input#userInput").val("");
-
+  $("#drawing").append("<img src='img/img_"+bodyPart+".png'>")
 
   });
 });
